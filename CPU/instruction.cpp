@@ -130,4 +130,71 @@ CPU::CP(std::uint8_t value)
     regs.set_flags({(regs.a == 0), true, is_half_overflow_sub<std::uint8_t>(regs.a, value), is_overflow_sub<std::uint8_t>(regs.a, value)});
 }
 
+void
+CPU::INC(Operand operand)
+{
+    std::uint8_t *ptr_to_reg = fetch_reg_ptr(operand);
+    if (ptr_to_reg != nullptr) {
+        const std::uint8_t new_value = *ptr_to_reg + 1;
+        regs.set_flags({(new_value == 0), false, is_half_overflow_add<std::uint8_t>(*ptr_to_reg, 1), is_overflow_add<std::uint8_t>(*ptr_to_reg, 1)});
+        *ptr_to_reg = new_value;
+    } else {
+        std::uint16_t new_value, old_value;
+        switch(operand) {
+        case Operand::bc:
+            old_value = regs.get_bc();
+            new_value = regs.get_bc() + 1;
+            regs.set_bc(new_value);
+            break;
+        case Operand::de:
+            old_value = regs.get_de();
+            new_value = regs.get_de() + 1;
+            regs.set_de(new_value);
+            break;
+        case Operand::hl:
+            old_value = regs.get_hl();
+            new_value = regs.get_hl() + 1;
+            regs.set_hl(new_value);
+            break;
+        default:
+            break;
+        }
+        regs.set_flags({(new_value == 0), false, is_half_overflow_add<std::uint16_t>(old_value, 1), is_overflow_add<std::uint16_t>(old_value, 1)});
+    }
+}
+
+void
+CPU::DEC(Operand operand)
+{
+    // TODO
+    std::uint8_t *ptr_to_reg = fetch_reg_ptr(operand);
+    if (ptr_to_reg != nullptr) {
+        const std::uint8_t new_value = *ptr_to_reg - 1;
+        regs.set_flags({(new_value == 0), false, is_half_overflow_sub<std::uint8_t>(*ptr_to_reg, 1), is_overflow_sub<std::uint8_t>(*ptr_to_reg, 1)});
+        *ptr_to_reg = new_value;
+    } else {
+        std::uint16_t new_value, old_value;
+        switch(operand) {
+        case Operand::bc:
+            old_value = regs.get_bc();
+            new_value = regs.get_bc() - 1;
+            regs.set_bc(new_value);
+            break;
+        case Operand::de:
+            old_value = regs.get_de();
+            new_value = regs.get_de() - 1;
+            regs.set_de(new_value);
+            break;
+        case Operand::hl:
+            old_value = regs.get_hl();
+            new_value = regs.get_hl() - 1;
+            regs.set_hl(new_value);
+            break;
+        default:
+            break;
+        }
+        regs.set_flags({(new_value == 0), false, is_half_overflow_sub<std::uint16_t>(old_value, 1), is_overflow_sub<std::uint16_t>(old_value, 1)});
+    }
+}
+
 } // gbe

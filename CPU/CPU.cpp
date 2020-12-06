@@ -9,7 +9,7 @@ namespace gbe {
 void
 CPU::execute(Instruction ins, Operand operand)
 {
-    const std::uint8_t  &ref_to_reg = fetch_reg_ref(operand);
+    //const std::uint8_t  &ref_to_reg = fetch_reg_ref(operand);
     const std::uint8_t  value_8bit  = fetch_8bit_value(operand);
     const std::uint16_t value_16bit = fetch_16bit_value(operand);
     switch(ins) {
@@ -22,8 +22,8 @@ CPU::execute(Instruction ins, Operand operand)
     case Instruction::OR:       OR (value_8bit);    break;
     case Instruction::XOR:      XOR(value_8bit);    break;
     case Instruction::CP:       CP (value_8bit);    break;
-    case Instruction::INC:
-    case Instruction::DEC:
+    case Instruction::INC:      INC(operand);       break;
+    case Instruction::DEC:      DEC(operand);       break;
     case Instruction::CCF:
     case Instruction::SCF:
     case Instruction::RRA:
@@ -46,18 +46,18 @@ CPU::execute(Instruction ins, Operand operand)
     }
 }
 
-const std::uint8_t &
-CPU::fetch_reg_ref(Operand operand) const
+std::uint8_t *
+CPU::fetch_reg_ptr(Operand operand)
 {
     switch(operand) {
-    case Operand::a:    return regs.a;
-    case Operand::b:    return regs.b;
-    case Operand::c:    return regs.c;
-    case Operand::d:    return regs.d;
-    case Operand::e:    return regs.e;
-    case Operand::h:    return regs.h;
-    case Operand::l:    return regs.l;
-    default:            return    0x0;
+    case Operand::a:    return &regs.a;
+    case Operand::b:    return &regs.b;
+    case Operand::c:    return &regs.c;
+    case Operand::d:    return &regs.d;
+    case Operand::e:    return &regs.e;
+    case Operand::h:    return &regs.h;
+    case Operand::l:    return &regs.l;
+    default:            return nullptr;
     }
 }
 

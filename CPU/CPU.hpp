@@ -13,7 +13,7 @@ public:
     void execute(Instruction ins, Operand operand);
 
 private:
-    const std::uint8_t &fetch_reg_ref    (Operand operand) const;
+    std::uint8_t* fetch_reg_ptr    (Operand operand);
     const std::uint8_t  fetch_8bit_value (Operand operand) const;
     const std::uint16_t fetch_16bit_value(Operand operand) const;
     void ADD    (std::uint8_t value);
@@ -25,6 +25,8 @@ private:
     void OR     (std::uint8_t value);
     void XOR    (std::uint8_t value);
     void CP     (std::uint8_t value);
+    void INC    (Operand operand);
+    void DEC    (Operand operand);
 };
 } // gbe
 #endif

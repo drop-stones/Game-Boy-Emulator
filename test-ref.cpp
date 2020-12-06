@@ -1,15 +1,21 @@
-int g = 100;
+
+struct Vec {
+    int x;
+    int y;
+};
+
+struct Vec vec1 {1, 2};
 
 int&
-ref_to_g (void)
+ref_to_x (void)
 {
-    return g;
+    return vec1.x;
 }
 
 int main(void)
 {
-    int &ref = ref_to_g();
+    int &ref = ref_to_x();
     ref = 200;
     //ref_to_g() = 200;
-    return g;
+    return vec1.x;
 }
