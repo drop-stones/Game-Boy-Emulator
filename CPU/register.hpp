@@ -2,7 +2,7 @@
 #define GB_EMULATOR_REGISTER_HPP_
 
 #include <cstdint>      // uintN_t
-#include <iostream>
+
 namespace gbe {
 struct Registers {
     // 8bit registers
@@ -16,10 +16,10 @@ struct Registers {
     std::uint8_t l;
 
     // 16bit getter
-    std::uint16_t get_af();
-    std::uint16_t get_bc();
-    std::uint16_t get_de();
-    std::uint16_t get_hl();
+    std::uint16_t get_af() const;
+    std::uint16_t get_bc() const;
+    std::uint16_t get_de() const;
+    std::uint16_t get_hl() const;
 
     // 16bit setter
     void set_af(std::uint16_t af_val);
@@ -28,8 +28,19 @@ struct Registers {
     void set_hl(std::uint16_t hl_val);
 
     // Flags function
-    struct FlagsRegister get_flags();
+    struct FlagsRegister get_flags() const;
     void set_flags(struct FlagsRegister flags);
+    bool get_zero_flag      () const;
+    bool get_subtract_flag  () const;
+    bool get_half_carry_flag() const;
+    bool get_carry_flag     () const;
+    void set_zero_flag      (const bool flag);
+    void set_subtract_flag  (const bool flag);
+    void set_half_carry_flag(const bool flag);
+    void set_carry_flag     (const bool flag);
+
+    // Utilities
+    void print() const;
 
     Registers():
         a{0}, b{0}, c{0}, d{0}, e{0}, f{0}, h{0}, l{0} {}
@@ -46,6 +57,9 @@ struct FlagsRegister {
         zero {0}, subtract {0}, half_carry {0}, carry {0} {}
     FlagsRegister(bool z, bool s, bool h, bool c) :
         zero {z}, subtract {s}, half_carry {h}, carry {c} {}
+    
+    const struct FlagsRegister operator| (const struct FlagsRegister &flags);
+    const struct FlagsRegister operator+ (const struct FlagsRegister &flags);
 };
 }// gbe
 
